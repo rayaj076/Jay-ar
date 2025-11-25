@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HTML Nightmare Ends Soon</title>
+  <style>
+    html,body{margin:0;height:100%;background:#0f0f1a;font-family:Arial;color:white;overflow:hidden}
+
+    .center{
+      position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+      text-align:center;
+    }
+
+    h1{
+      font-size:3rem;
+      animation:bounce 1.5s infinite;
+      line-height:1.15;
+      white-space:pre-wrap;
+    }
+
+    @keyframes bounce{
+      0%,100%{transform:translate(-50%,-50%) scale(1)}
+      50%{transform:translate(-50%,-52%) scale(1.05)}
+    }
+
+    /* floating shapes */
+    .shape{
+      position:absolute;width:18px;height:18px;border-radius:4px;
+      background:#ffbb00;opacity:.85;
+      animation:float 6s linear infinite;
+      will-change:transform;
+    }
+    @keyframes float{
+      0%{transform:translateY(110vh) rotate(0)}
+      100%{transform:translateY(-20vh) rotate(360deg)}
+    }
+
+    .ghost{
+      width:140px;height:160px;background:white;border-radius:60% 60% 40% 40%;
+      position:absolute;bottom:8%;left:50%;transform:translateX(-50%);
+      animation:wiggle 2s ease-in-out infinite;
+      box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    }
+    .ghost:before{
+      content:"";position:absolute;width:100px;height:80px;border-radius:50%;
+      background:#0f0f1a;top:40px;left:20px;
+    }
+    @keyframes wiggle{
+      0%,100%{transform:translateX(-50%) translateY(0)}
+      50%{transform:translateX(-50%) translateY(-10px)}
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="center">
+    <h1 id="typeText" aria-live="polite"></h1>
+  </div>
+
+  <div class="ghost" aria-hidden="true"></div>
+
+  <!-- shapes -->
+  <script>
+    // create floating shapes (use j to avoid clashing with typing index)
+    const shapesCount = 40;
+    for (let j = 0; j < shapesCount; j++) {
+      const s = document.createElement('div');
+      s.className = 'shape';
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.animationDelay = (Math.random() * 5) + 's';
+      s.style.background = `hsl(${Math.random() * 360},80%,60%)`;
+      s.style.transform = `translateY(${Math.random() * 40}vh)`;
+      document.body.appendChild(s);
+    }
+
+    // typing effect - fixed syntax
+    const text = `Your HTML Nightmare
+Is Almost Over 😭✨
+~ Sir Jay`;
+    const el = document.getElementById('typeText');
+    let i = 0;
+    const speed = 70; // ms per character
+
+    function type(){
+      if (i <= text.length) {
+        // replace newline characters with <br> correctly (single-line regex)
+        el.innerHTML = text.slice(0, i).replace(/\n/g, '<br>');
+        i++;
+        setTimeout(type, speed);
+      }
+    }
+
+    // start typing after a short delay so shapes render first
+    setTimeout(type, 300);
+  </script>
+
+</body>
+</html>
