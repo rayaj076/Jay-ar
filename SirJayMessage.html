@@ -14,11 +14,11 @@
         background: #f0f0f0;
     }
 
-    /* Wrapper */
     .container {
         max-width: 900px;
         margin: auto;
         padding: 20px;
+        text-align: center; /* FULL CENTERING */
     }
 
     /* NAV BAR */
@@ -39,7 +39,7 @@
         font-size: 18px;
     }
 
-    /* Responsive navigation */
+    /* Mobile nav fixes */
     @media (max-width: 600px) {
         nav {
             flex-direction: column;
@@ -48,6 +48,7 @@
         }
         nav a {
             font-size: 16px;
+            margin-left: 0;
         }
     }
 
@@ -61,19 +62,19 @@
         overflow: hidden;
         border-right: 3px solid black;
         animation: caret 0.7s infinite;
+        text-align: center;
     }
 
     @keyframes caret {
         50% { border-color: transparent; }
     }
 
-    /* Responsive text size */
+    /* Mobile font adjustment */
     @media (max-width: 600px) {
         .animated-text {
-            font-size: 24px;
+            font-size: 26px;
         }
     }
-
 </style>
 </head>
 <body>
@@ -81,3 +82,34 @@
 <div class="container">
 
     <nav>
+        <div class="logo">My Website</div>
+        <div class="links">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Gallery</a>
+        </div>
+    </nav>
+
+    <!-- TEXT IS NOW 100% CENTERED -->
+    <h2 class="animated-text" id="text"></h2>
+
+</div>
+
+<script>
+/* LETTER BY LETTER EFFECT */
+const text = "~Sir Jay";
+let index = 0;
+
+function typeLetter() {
+    document.getElementById("text").textContent = text.substring(0, index);
+    index++;
+    if (index <= text.length) {
+        setTimeout(typeLetter, 80);
+    }
+}
+
+typeLetter();
+</script>
+
+</body>
+</html>
