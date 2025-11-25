@@ -1,115 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HTML Nightmare Ends Soon</title>
+  <style>
+    html,body{margin:0;height:100%;background:#0f0f1a;font-family:Arial;color:white;overflow:hidden}
 
-<title>Letter by Letter Animation</title>
-
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background: #f0f0f0;
+    .center{
+      position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+      text-align:center;
     }
 
-    .container {
-        max-width: 900px;
-        margin: auto;
-        padding: 20px;
-        text-align: center; /* FULL CENTERING */
+    h1{
+      font-size:2.2rem;
+      animation:bounce 1.5s infinite;
+      line-height:1.2;
+      white-space:pre-wrap;
+      padding:0 20px;
+      max-width:90vw;
     }
 
-    /* NAV BAR */
-    nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: #333;
-        padding: 15px;
-        border-radius: 10px;
-        color: white;
+    @keyframes bounce{
+      0%,100%{text-shadow:0 0 0px #fff}
+      50%{text-shadow:0 0 12px #ffffffaa}
+    }
+      50%{transform:scale(1.05)}
+    }
+      50%{transform:translate(-50%,-52%) scale(1.05)}
     }
 
-    nav a {
-        color: white;
-        text-decoration: none;
-        margin-left: 15px;
-        font-size: 18px;
+    /* floating shapes */
+    .shape{
+      position:absolute;width:18px;height:18px;border-radius:4px;
+      background:#ffbb00;opacity:.85;
+      animation:float 6s linear infinite;
+      will-change:transform;
+    }
+    @keyframes float{
+      0%{transform:translateY(110vh) rotate(0)}
+      100%{transform:translateY(-20vh) rotate(360deg)}
     }
 
-    /* Mobile nav fixes */
-    @media (max-width: 600px) {
-        nav {
-            flex-direction: column;
-            gap: 10px;
-            text-align: center;
-        }
-        nav a {
-            font-size: 16px;
-            margin-left: 0;
-        }
+    .ghost{
+      width:140px;height:160px;background:white;border-radius:60% 60% 40% 40%;
+      position:absolute;bottom:8%;left:50%;transform:translateX(-50%);
+      animation:wiggle 2s ease-in-out infinite;
+      box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    }
+    .ghost:before{
+      content:"";position:absolute;width:100px;height:80px;border-radius:50%;
+      background:#0f0f1a;top:40px;left:20px;
+    }
+    @keyframes wiggle{
+      0%,100%{transform:translateX(-50%) translateY(0)}
+      50%{transform:translateX(-50%) translateY(-10px)}
     }
 
-    /* LETTER BY LETTER TEXT */
-    .animated-text {
-        display: inline-block;
-        font-size: 32px;
-        font-weight: bold;
-        margin-top: 30px;
-        white-space: nowrap;
-        overflow: hidden;
-        border-right: 3px solid black;
-        animation: caret 0.7s infinite;
-        text-align: center;
+      /* mobile adjustments */
+    @media (max-width: 480px){
+      h1{
+        font-size:1.6rem;
+        line-height:1.25;
+      }
+      .ghost{
+        width:100px;height:120px;
+        bottom:5%;
+      }
+      .center{
+        width:100%;
+      }
     }
 
-    @keyframes caret {
-        50% { border-color: transparent; }
-    }
-
-    /* Mobile font adjustment */
-    @media (max-width: 600px) {
-        .animated-text {
-            font-size: 26px;
-        }
-    }
-</style>
+  </style>
 </head>
 <body>
 
-<div class="container">
+  <div class="center">
+    <h1 id="typeText" aria-live="polite"></h1>
+  </div>
 
-    <nav>
-        <div class="logo">My Website</div>
-        <div class="links">
-            <a href="#">Home</a>
-            <a href="#">About</a>
-            <a href="#">Gallery</a>
-        </div>
-    </nav>
+  <div class="ghost" aria-hidden="true"></div>
 
-    <!-- TEXT IS NOW 100% CENTERED -->
-    <h2 class="animated-text" id="text"></h2>
-
-</div>
-
-<script>
-/* LETTER BY LETTER EFFECT */
-const text = "~Sir Jay";
-let index = 0;
-
-function typeLetter() {
-    document.getElementById("text").textContent = text.substring(0, index);
-    index++;
-    if (index <= text.length) {
-        setTimeout(typeLetter, 80);
+  <!-- shapes -->
+  <script>
+    // create floating shapes (use j to avoid clashing with typing index)
+    const shapesCount = 40;
+    for (let j = 0; j < shapesCount; j++) {
+      const s = document.createElement('div');
+      s.className = 'shape';
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.animationDelay = (Math.random() * 5) + 's';
+      s.style.background = `hsl(${Math.random() * 360},80%,60%)`;
+      s.style.transform = `translateY(${Math.random() * 40}vh)`;
+      document.body.appendChild(s);
     }
-}
 
-typeLetter();
-</script>
+    // typing effect - fixed syntax
+    const text = `Your HTML Nightmare
+Is Almost Over 😭✨
+~ Sir Jay`;
+    const el = document.getElementById('typeText');
+    let i = 0;
+    const speed = 70; // ms per character
+
+    function type(){
+      if (i <= text.length) {
+        // replace newline characters with <br> correctly (single-line regex)
+        el.innerHTML = text.slice(0, i).replace(/\n/g, '<br>');
+        i++;
+        setTimeout(type, speed);
+      }
+    }
+
+    // start typing after a short delay so shapes render first
+    setTimeout(type, 300);
+  </script>
 
 </body>
 </html>
